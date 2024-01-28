@@ -1,0 +1,8 @@
+envelope,month,period,budget
+Household,2023-12,o,10
+Household:Kids,2023-10,o,40
+Household:Clothing,2023-10,o,-40
+Household:Kids,2023-10,m,150
+Household:Clothing,2023-10,m,100
+Household:Clothing,2023-12,m,0
+PocketMoney>Household,2023-12,t,666

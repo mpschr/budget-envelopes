@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "budget-envelopes"
+version = "0.2.0"
+description = ""
+authors = ["Michael P Schroeder <michael.p.schroeder@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.13"
+numpy = "^1.26.1"
+pandas = "^2.1.2"
+click = "^8.1.7"
+matplotlib = "^3.8.0"
+
+
+[tool.poetry.scripts]
+budget-envelopes = "budget_envelopes.cli:main_cli"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+mypy = "^1.6.1"
+black = {version = "^23.10.1", allow-prereleases = true}
+ipykernel = "^6.26.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
