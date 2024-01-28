@@ -1,12 +1,12 @@
 envelope,month,period,budget,comments
 Car,2023-01,y,1630,Insurance (890) + Garage (600) + Steuer (140)
-Car:Gas,2023-01,m,80.00
-Car:Parking,2023-01,m,15.00
+Car:Gas,2023-01,m,80.00,
+Car:Parking,2023-01,m,15.00,
 Public Transport,2023-11,m,30,Taking bus to work now
-Household:Clothing,2023-01,y,1000.00
+Household:Clothing,2023-01,y,1000.00,
 Household:Pets,2023-06,m,100,New pet arrived in June
 Household:Pets,2023-07,m,150,That is one hungry beast
-Household:Groceries,2023-01,m,1000.00
+Household:Groceries,2023-01,m,1000.00,
 Household:Groceries,2024-01,m,1200.00, Inflation...
 Living:Power,2023-01,q,300,A bill every three months arrives
 Health:Insurance,2023-01,h,2000,Billing twice a year..
