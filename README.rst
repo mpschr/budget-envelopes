@@ -44,7 +44,7 @@ Done:
 
 Todo:
 
-* proper testing (surpriiiiise!)
+* proper testing (surpriiiiise!). Available tests probablyl don't work anymore
 * Proper visualisation in homeassistant
 * Explain envelope_budget.csv and envelope_adjustments.csv better
 * Supply example transactions
