@@ -1,13 +1,14 @@
 """Console script for budget_envelopes."""
 import sys
+print(sys.path)
 import random
 import string
 import click
 import json
-from budget_envelopes.plot import plot_month
-from budget_envelopes.budget_reader import BudgetReader
-from budget_envelopes.envelope_stats_calculator import EnvelopeStatsCalculator
-from budget_envelopes.transactions_reader import TransactionsReader
+from .plot import plot_month
+from .budget_reader import BudgetReader
+from .envelope_stats_calculator import EnvelopeStatsCalculator
+from .transactions_reader import TransactionsReader
 import logging
 import pandas
 from datetime import datetime
@@ -47,7 +48,6 @@ logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
     "-E",
     help="Field supplying the envelope (category) from which the money is drawn or put into. Must match categories in budgets-file",
 )
-@click.option("--need-field", "-N", help="Does nothing. Deprecated")
 @click.option(
     "--debit-flag-field",
     help="Field supplying the debit/credit flag. Also supply --debit-flag",
@@ -77,7 +77,6 @@ def main_cli(
     amount_field,
     envelope_field,
     date_field,
-    need_field,
     output_file,
     debit_flag_field=None,
     debit_flag=None,
@@ -105,7 +104,6 @@ def main_cli(
             amount_field=amount_field,
             date_field=date_field,
             envelope_field=envelope_field,
-            need_field=need_field,
             debit_flag_field=debit_flag_field,
             debit_flag=debit_flag,
             session=session,

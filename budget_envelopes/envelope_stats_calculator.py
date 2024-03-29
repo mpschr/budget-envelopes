@@ -1,5 +1,5 @@
-from budget_envelopes.transactions_reader import TransactionsReader
-from budget_envelopes.budget_reader import BudgetReader
+from .transactions_reader import TransactionsReader
+from .budget_reader import BudgetReader
 import logging
 import warnings
 
@@ -39,7 +39,6 @@ class EnvelopeStatsCalculator(object):
         new_statements = transactions.get_statements()
 
         new_statements.envelope = new_statements.envelope.fillna('NOT SET')
-        new_statements = new_statements.drop('need',axis=1).dropna() ## todo: fix it correctly
         new_statements['month'] = new_statements['date'].apply(lambda d: f'{d.year}-{d.month:02d}')
 
         if self._transactions is None:

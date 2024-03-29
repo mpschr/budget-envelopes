@@ -13,7 +13,6 @@ logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
 
 AMT = "amount_field"
 ENVELOPE = "envelope_field"
-NEED = "need_field" # deprecated
 DATE = "date_field"
 DEBIT_FLAG_FIELD = "debit_flag_field"
 DEBIT_FLAG = "debit_flag"
@@ -24,20 +23,18 @@ SESSION = "session"
 class TransactionsReader(object):
     def __new__(cls, *args, **kwargs):
         if cls == TransactionsReader:
-            # enter if in base class factory mode
+            # Factory class has been instantiated: enter if in base class factory mode
             if kwargs["filename"].endswith(".json"):
-                return JSONTransactionsReader(*args, **kwargs)
+                return super().__new__(JSONTransactionsReader)            
             if kwargs["filename"].endswith(".csv"):
-                return CSVTransactionsReader(*args, **kwargs)
+                return super().__new__(CSVTransactionsReader)
         else:
-            # cls.__init__(cls)
-            # return self (cls)
-            instance = super().__new__(cls)
-            return instance
+            # one of the factory products has been instantiated directly
+            return super().__new__(cls)
 
     def __init__(self, *args, **kwargs):
         allowed_keys = set(
-            [AMT, DATE, ENVELOPE, NEED, DEBIT_FLAG_FIELD, DEBIT_FLAG, FILENAME, SESSION]
+            [AMT, DATE, ENVELOPE, DEBIT_FLAG_FIELD, DEBIT_FLAG, FILENAME, SESSION]
         )
         self.__dict__.update((k, False) for k in allowed_keys)
         self.__dict__.update((k, v) for k, v in kwargs.items() if k in allowed_keys)
@@ -57,44 +54,54 @@ class TransactionsReader(object):
         ignored_due_tue_date_count = 0
 
         for x in jsoncontents:
+            # x is a transaction in json format
             x = pandas.Series(x).dropna().to_dict()
 
-            #todo: discard transactions dated in the future 
+            # d is a dictionary where extracted infrmation is stored into
             d = {}
-            d["amount"] = float(x[self.__dict__[AMT]])
+            
+            self._extract_amount(x, d)
+            self._extract_date(x, d)
+            self._extract_envelope(x, d)
 
-            for date in self.__dict__[DATE]:
-                if date in x:
-                    d["date"] =  dateparser.parse(x[date]).date()
-                    ## valid date found no need to look at lower prio fields
-                    break
+            # ignore bookings set for the future
             if d["date"] > datetime.date.today():
-                # ignore bookings set for the future
                 ignored_due_tue_date_count += 1
                 continue   
             if "date" not in d:
                 logging.error(f"No Date found for {x}")
                 continue
 
-            try:
-                d["envelope"] = x[self.__dict__[ENVELOPE]]
-            except KeyError:
-                d["envelope"] = ""
-
-            if self.__dict__[DEBIT_FLAG_FIELD] != False:
-                if x[self.__dict__[DEBIT_FLAG_FIELD]] != self.__dict__[DEBIT_FLAG]:
-                    d["amount"] = -d["amount"]
-
-            try:
-                d["need"] = x[self.__dict__[NEED]]
-            except KeyError:
-                pass
-
             extracted_contents.append(d)
             self.add_parent_envelopes(extracted_contents, d)
 
         logging.info(f"ignored {ignored_due_tue_date_count} transactions, set for future date")
         return extracted_contents
+
+    def _extract_amount(self, source: dict, target: dict) -> None:
+        # extract amount using the supplied AMT key
+        target["amount"] = float(source[self.__dict__[AMT]])
+
+        # adjust Credit/Debit with flag, if needed, using DEBIT_FLAG_FIELD & DEBIT_FLAG
+        # e.g. Flag Field: BOOKINGTYPE , Debit Flag [String]: "DBT"
+        if self.__dict__[DEBIT_FLAG_FIELD] != False:
+            if source[self.__dict__[DEBIT_FLAG_FIELD]] != self.__dict__[DEBIT_FLAG]:
+                target["amount"] = -target["amount"]
+
+    def _extract_envelope(self, source: dict, target: dict) -> None: 
+        # Extracts the envelope (category) of the source dict using the supplied ENVELOPE key
+        try:
+            target["envelope"] = source[self.__dict__[ENVELOPE]]
+        except KeyError:
+            target["envelope"] = ""
+
+    def _extract_date(self, source: dict, target: dict) -> None:
+        # Extracts the date of the source dict using the supplied DATE key
+        for date in self.__dict__[DATE]:
+            if date in source:
+                target["date"] =  dateparser.parse(source[date]).date()
+                ## valid date found no need to look at lower prio fields
+                break
 
     def add_parent_envelopes(self, extracted_contents, d):
         try:
