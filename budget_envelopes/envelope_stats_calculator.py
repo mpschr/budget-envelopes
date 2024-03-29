@@ -40,7 +40,7 @@ class EnvelopeStatsCalculator(object):
 
         new_statements.envelope = new_statements.envelope.fillna('NOT SET')
         new_statements = new_statements.drop('need',axis=1).dropna() ## todo: fix it correctly
-        new_statements['month'] = new_statements['date'].apply(lambda s: s[0:7])
+        new_statements['month'] = new_statements['date'].apply(lambda d: f'{d.year}-{d.month:02d}')
 
         if self._transactions is None:
             self._transactions = new_statements

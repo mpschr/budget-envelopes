@@ -5,13 +5,15 @@ import sys
 print(sys.version)
 import pandas
 import logging
+import dateutil.parser as dateparser
+import datetime 
 
 logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
 
 
 AMT = "amount_field"
 ENVELOPE = "envelope_field"
-NEED = "need_field"
+NEED = "need_field" # deprecated
 DATE = "date_field"
 DEBIT_FLAG_FIELD = "debit_flag_field"
 DEBIT_FLAG = "debit_flag"
@@ -52,17 +54,24 @@ class TransactionsReader(object):
 
     def extract_contents(self, jsoncontents: list[dict]):
         extracted_contents = []
+        ignored_due_tue_date_count = 0
 
         for x in jsoncontents:
             x = pandas.Series(x).dropna().to_dict()
 
+            #todo: discard transactions dated in the future 
             d = {}
             d["amount"] = float(x[self.__dict__[AMT]])
 
             for date in self.__dict__[DATE]:
                 if date in x:
-                    d["date"] = x[date]
+                    d["date"] =  dateparser.parse(x[date]).date()
+                    ## valid date found no need to look at lower prio fields
                     break
+            if d["date"] > datetime.date.today():
+                # ignore bookings set for the future
+                ignored_due_tue_date_count += 1
+                continue   
             if "date" not in d:
                 logging.error(f"No Date found for {x}")
                 continue
@@ -83,6 +92,8 @@ class TransactionsReader(object):
 
             extracted_contents.append(d)
             self.add_parent_envelopes(extracted_contents, d)
+
+        logging.info(f"ignored {ignored_due_tue_date_count} transactions, set for future date")
         return extracted_contents
 
     def add_parent_envelopes(self, extracted_contents, d):
