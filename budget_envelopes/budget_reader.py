@@ -25,9 +25,11 @@ class BudgetReader(object):
     def __init__(self, *args, **kwargs):
 
         self.budgets = None
+        self.budgets_filename = kwargs["filename"]
         self._read_budgets(kwargs["filename"])
 
     def _read_budgets(self, filename):
+        # abstract method
         raise NotImplementedError
 
     def _calc_parent_budgets(self, budgets: pandas.DataFrame) -> pandas.DataFrame:
@@ -136,8 +138,6 @@ class CSVBudgetReader(BudgetReader):
         budgets = (
             pandas.read_csv(filename).set_index(["envelope", "month"]).sort_index()
         )
-
-        self.budgets_filename = filename
 
         # type 'o' (one-off) and 't' (transfer). 't' are converted into 'o'
         adjustments = budgets.query(f'period in ["o","t"]')
