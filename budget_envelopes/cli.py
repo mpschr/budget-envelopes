@@ -111,7 +111,7 @@ def main_cli(
 
         esc.add_transactions(reader)
 
-    stats = esc.get_envelope_stats()  # .drop_duplicates() ## todo: bug?
+    stats = esc.get_envelope_stats()
     month_now = f"{datetime.now().year}-{datetime.now().month:02d}"
     stats_json = stats.query(f"month == '{month_now}'").reset_index().to_dict("records")
     stats.reset_index().to_csv(output_file.replace(".json", ".csv"))

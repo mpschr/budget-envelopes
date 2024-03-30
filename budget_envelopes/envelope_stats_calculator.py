@@ -88,7 +88,8 @@ class EnvelopeStatsCalculator(object):
     def get_envelope_stats(self) -> pandas.DataFrame:
 
         if self._first_month is None:
-            self._first_month = '2022-09' ##TODO: CALCULATE WHICH WOULD BE THE FIRST MONTH
+            self._first_month = self._transactions.month.min()
+            logging.info(f"--first-month argument not supplied. Assuming {self._first_month} from data.")
         
         self._update_budget_months() 
 

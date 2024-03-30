@@ -10,19 +10,19 @@ FILENAME = "filename"
 class BudgetReader(object):
     def __new__(cls, *args, **kwargs):
         if cls == BudgetReader:
-            # enter if in base class factory mode
+            # Factory class has been instantiated: enter if in base class factory mode
             if kwargs["filename"].endswith(".json"):
-                return JSONBudgetReader(*args, **kwargs)
-            if kwargs["filename"].endswith(".csv"):
-                return CSVBudgetReader(*args, **kwargs)
+                return super().__new__(JSONBudgetReader)            
+            elif kwargs["filename"].endswith(".csv"):
+                return super().__new__(CSVBudgetReader)
+            else:
+                raise Exception("Budget-input: Either .json or .csv-file needed.")
         else:
-            # cls.__init__(cls)
-            # return self (cls)
+            # one of the factory products has been instantiated directly
             instance = super().__new__(cls)
             return instance
 
     def __init__(self, *args, **kwargs):
-        # TODO: SOLVE DOUBLE INIT PROPERLY
 
         self.budgets = None
         self._read_budgets(kwargs["filename"])

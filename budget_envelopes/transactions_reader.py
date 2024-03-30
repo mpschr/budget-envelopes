@@ -26,8 +26,10 @@ class TransactionsReader(object):
             # Factory class has been instantiated: enter if in base class factory mode
             if kwargs["filename"].endswith(".json"):
                 return super().__new__(JSONTransactionsReader)            
-            if kwargs["filename"].endswith(".csv"):
+            elif kwargs["filename"].endswith(".csv"):
                 return super().__new__(CSVTransactionsReader)
+            else:
+                raise Exception("Transactions-input: Either .json or .csv-file needed.")            
         else:
             # one of the factory products has been instantiated directly
             return super().__new__(cls)
