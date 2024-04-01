@@ -26,6 +26,10 @@ ipykernel = "^6.26.0"
 pytest = "^8.1.1"
 pytest-helpers-namespace = "^2021.12.29"
 
+
+[tool.poetry.group.doc.dependencies]
+sphinx = "^7.2.6"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

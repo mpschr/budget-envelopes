@@ -92,7 +92,10 @@ Command line options:
 Credits
 -------
 
-This package was created with poetry
+- This package was created with poetry
+- Docs tutorials: 
+  - https://eikonomega.medium.com/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365
+  - https://leanmind.es/en/blog/how-to-publish-your-python-project-documentation-on-read-the-docs/
 
 
 Other blabla's
