@@ -28,6 +28,7 @@ Features
 Done:
 
 * Reads transactions from file in custom formats (see CLI options: :code:`budget-envelopes --help`)
+   * Example JSON-transactions & example csv-transactions. See `examples/`
 * Reads budgets from file in specific format (see example file :code:`examples/envelope_budget.csv`)
    * Supply budgets indicating the budgeting period as 
       * month: :code:`m`
@@ -45,13 +46,19 @@ Done:
 Todo:
 
 * proper testing (surpriiiiise!). Available tests probablyl don't work anymore
+  * Pytest is set up.
 * Proper visualisation in homeassistant
-* Explain envelope_budget.csv and envelope_adjustments.csv better
-* Supply example transactions
-  
+* Explain envelope_budget.csv and envelope_adjustments.csv better  
 
 Command line options:
 --------------------------------
+
+see also * Documentation: http://budget-envelopes.rtfd.io
+
+.. image:: https://readthedocs.org/projects/budget-envelopes/badge/?version=latest
+        :target: https://budget-envelopes.readthedocs.io/en/latest/?version=latest
+        :alt: Documentation Status
+
 .. code-block:: bash
 
         > budget-envelopes --help
@@ -107,10 +114,6 @@ Other blabla's
 .. image:: https://img.shields.io/travis/mpschr/budget_envelopes.svg
         :target: https://travis-ci.com/mpschr/budget_envelopes
 
-.. image:: https://readthedocs.org/projects/budget-envelopes/badge/?version=latest
-        :target: https://budget-envelopes.readthedocs.io/en/latest/?version=latest
-        :alt: Documentation Status
 
 
 * Free software: MIT license
-* Documentation: https://budget-envelopes.readthedocs.io.
