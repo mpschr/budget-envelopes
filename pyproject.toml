@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "budget-envelopes"
-version = "0.3.0"
+version = "0.3.1"
 description = ""
 authors = ["Michael P Schroeder <michael.p.schroeder@gmail.com>"]
 readme = "README.rst"
