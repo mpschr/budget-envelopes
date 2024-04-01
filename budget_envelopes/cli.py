@@ -106,7 +106,7 @@ def main_cli(
             envelope_field=envelope_field,
             debit_flag_field=debit_flag_field,
             debit_flag=debit_flag,
-            session=session,
+            session=session
         )
 
         esc.add_transactions(reader)

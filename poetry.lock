@@ -1277,6 +1277,25 @@ tomli = {version = ">=1", markers = "python_version < \"3.11\""}
 testing = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
+name = "pytest-helpers-namespace"
+version = "2021.12.29"
+description = "Pytest Helpers Namespace Plugin"
+optional = false
+python-versions = ">=3.5.6"
+files = [
+    {file = "pytest-helpers-namespace-2021.12.29.tar.gz", hash = "sha256:792038247e0021beb966a7ea6e3a70ff5fcfba77eb72c6ec8fd6287af871c35b"},
+    {file = "pytest_helpers_namespace-2021.12.29-py3-none-any.whl", hash = "sha256:d5c0262642998437a73d85cb6ae0db57d574facc551c4a4695e92ec50469eb98"},
+]
+
+[package.dependencies]
+pytest = ">=6.0.0"
+
+[package.extras]
+changelog = ["towncrier (==21.9.0rc1)"]
+docs = ["furo", "sphinx", "sphinx-copybutton", "sphinx-prompt", "sphinxcontrib-spelling", "sphinxcontrib-towncrier (>=0.2.0a0)", "towncrier (==21.3.0)"]
+lint = ["black", "pyenchant", "pylint (==2.12.2)", "reorder-python-imports"]
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
@@ -1556,4 +1575,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.13"
-content-hash = "95689bd65914d951055be1d9ecb134af9a2badd1c4b2aebe2b1fe61600fe92c2"
+content-hash = "04f7ea0129e06a3334d5cd88b1efee3ea11f84ed16e133a2fc8874c8e4e01766"

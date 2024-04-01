@@ -24,6 +24,7 @@ mypy = "^1.6.1"
 black = {version = "^23.10.1", allow-prereleases = true}
 ipykernel = "^6.26.0"
 pytest = "^8.1.1"
+pytest-helpers-namespace = "^2021.12.29"
 
 [build-system]
 requires = ["poetry-core"]

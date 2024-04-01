@@ -1,8 +1,5 @@
 """Main module."""
 import json
-import sys
-
-print(sys.version)
 import pandas
 import logging
 import dateutil.parser as dateparser
@@ -34,12 +31,30 @@ class TransactionsReader(object):
             # one of the factory products has been instantiated directly
             return super().__new__(cls)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, 
+                 filename: str,
+                 amount_field: str,
+                 date_field: list,
+                 envelope_field: str,
+                 debit_flag_field : str = False,
+                 debit_flag : str = None,
+                 session : str = None,
+                   *args, **kwargs):
+        
         allowed_keys = set(
             [AMT, DATE, ENVELOPE, DEBIT_FLAG_FIELD, DEBIT_FLAG, FILENAME, SESSION]
         )
         self.__dict__.update((k, False) for k in allowed_keys)
-        self.__dict__.update((k, v) for k, v in kwargs.items() if k in allowed_keys)
+        self.__dict__.update({
+            FILENAME: filename,
+            AMT: amount_field,
+            DATE: date_field,
+            ENVELOPE: envelope_field,
+            DEBIT_FLAG_FIELD: debit_flag_field,
+            DEBIT_FLAG: debit_flag,
+            SESSION: session    
+        })
+        self.__dict__.update((k, v) for k, v in kwargs if k in allowed_keys)
 
         self._extracted_contents = None
 

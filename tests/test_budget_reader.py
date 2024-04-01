@@ -2,13 +2,12 @@
 
 """Tests for `budget_envelopes` package."""
 
-
-import unittest
+import pytest
 
 from budget_envelopes.budget_reader import BudgetReader
 from budget_envelopes.envelope_stats_calculator import EnvelopeStatsCalculator
 
-class TestBudgetAdjustment(unittest.TestCase):
+class TestBudgetAdjustment():
     """Tests that budget reader is reading budget files correctly."""
 
     def test_budgetadjustments(self):
@@ -28,8 +27,8 @@ class TestBudgetAdjustment(unittest.TestCase):
 
         calculator = EnvelopeStatsCalculator()
 
-        budgetsreader = BudgetReader(filename='examples/envelope_budgets.csv')
-        adjustmentsreader = BudgetReader(filename='examples/envelope_adjustments.csv')
+        budgetsreader = pytest.helpers.get_budgets()
+        adjustmentsreader = pytest.helpers.get_envelope_adjustments()
         calculator.add_budgets(budgetsreader)
         calculator.add_budgets(adjustmentsreader)
         # no budgets, only adjustments in this file
@@ -58,4 +57,4 @@ class TestBudgetAdjustment(unittest.TestCase):
    
 
 if __name__ == '__main__':
-    unittest.main()
+    pass
