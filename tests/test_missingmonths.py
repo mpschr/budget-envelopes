@@ -1,10 +1,9 @@
 first_month = '2023-10'
 last_month = '2024-01'
-import unittest
 
 
 
-class TestBudgetAdjustment(unittest.TestCase):
+class TestBudgetAdjustment():
     """Tests that budget reader is reading budget files correctly."""
     def test_fill_missing_months(self):
         min_year,min_month = [int(x) for x in first_month.split('-')]
@@ -25,4 +24,4 @@ class TestBudgetAdjustment(unittest.TestCase):
 
     
 if __name__ == '__main__':
-    unittest.main()
+    pass
