@@ -1,5 +1,6 @@
 """Console script for budget_envelopes."""
 import sys
+
 print(sys.path)
 import random
 import string

@@ -12,7 +12,7 @@ class BudgetReader(object):
         if cls == BudgetReader:
             # Factory class has been instantiated: enter if in base class factory mode
             if kwargs["filename"].endswith(".json"):
-                return super().__new__(JSONBudgetReader)            
+                return super().__new__(JSONBudgetReader)
             elif kwargs["filename"].endswith(".csv"):
                 return super().__new__(CSVBudgetReader)
             else:
@@ -23,7 +23,6 @@ class BudgetReader(object):
             return instance
 
     def __init__(self, *args, **kwargs):
-
         self.budgets = None
         self.budgets_filename = kwargs["filename"]
         self._read_budgets(kwargs["filename"])
@@ -42,10 +41,12 @@ class BudgetReader(object):
         return (
             hierarchy_adjusted.explode("envelope")
             .groupby(["envelope", "month"])
-            .agg({
-                "budget": lambda x: x.sum(min_count=1),
-                "adjustment": lambda x: x.sum(min_count=1)
-            })
+            .agg(
+                {
+                    "budget": lambda x: x.sum(min_count=1),
+                    "adjustment": lambda x: x.sum(min_count=1),
+                }
+            )
         )
 
     def _break_down_to_monthly_budgets(self, s: pandas.Series):
@@ -84,9 +85,8 @@ class BudgetReader(object):
 
     ## make sure all envelopes and budgets are available for all specified months
     def _product_budgets(self, budgets: pandas.DataFrame) -> pandas.DataFrame:
-
         # make sure each possible index is listed only once (transfers lead to repeated index)
-        budgets = budgets.groupby(['envelope','month']).sum(min_count=1)
+        budgets = budgets.groupby(["envelope", "month"]).sum(min_count=1)
 
         # create cross (product) index of motnhs and envelopes
         budget_months = budgets.reset_index("month").month.unique()
@@ -114,7 +114,7 @@ class BudgetReader(object):
         for _ in hierarchy[::-1]:
             hierarchy.remove(_)
             parent_envelope = ":".join(hierarchy)
-            #if parent_envelope == "":
+            # if parent_envelope == "":
             #    parent_envelope = "TOTAL"
 
             parent_envelopes.append(parent_envelope)

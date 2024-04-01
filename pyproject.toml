@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "budget-envelopes"
-version = "0.3.0"
+version = "0.3.1"
 description = ""
 authors = ["Michael P Schroeder <michael.p.schroeder@gmail.com>"]
-readme = "README.md"
+readme = "README.rst"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
@@ -24,6 +24,12 @@ mypy = "^1.6.1"
 black = {version = "^23.10.1", allow-prereleases = true}
 ipykernel = "^6.26.0"
 pytest = "^8.1.1"
+pytest-helpers-namespace = "^2021.12.29"
+
+
+[tool.poetry.group.doc.dependencies]
+sphinx = "^7.2.6"
+sphinx-click = "^5.1.0"
 
 [build-system]
 requires = ["poetry-core"]

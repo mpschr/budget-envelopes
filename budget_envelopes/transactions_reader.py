@@ -1,12 +1,9 @@
 """Main module."""
 import json
-import sys
-
-print(sys.version)
 import pandas
 import logging
 import dateutil.parser as dateparser
-import datetime 
+import datetime
 
 logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
 
@@ -25,21 +22,43 @@ class TransactionsReader(object):
         if cls == TransactionsReader:
             # Factory class has been instantiated: enter if in base class factory mode
             if kwargs["filename"].endswith(".json"):
-                return super().__new__(JSONTransactionsReader)            
+                return super().__new__(JSONTransactionsReader)
             elif kwargs["filename"].endswith(".csv"):
                 return super().__new__(CSVTransactionsReader)
             else:
-                raise Exception("Transactions-input: Either .json or .csv-file needed.")            
+                raise Exception("Transactions-input: Either .json or .csv-file needed.")
         else:
             # one of the factory products has been instantiated directly
             return super().__new__(cls)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+        self,
+        filename: str,
+        amount_field: str,
+        date_field: list,
+        envelope_field: str,
+        debit_flag_field: str = False,
+        debit_flag: str = None,
+        session: str = None,
+        *args,
+        **kwargs,
+    ):
         allowed_keys = set(
             [AMT, DATE, ENVELOPE, DEBIT_FLAG_FIELD, DEBIT_FLAG, FILENAME, SESSION]
         )
         self.__dict__.update((k, False) for k in allowed_keys)
-        self.__dict__.update((k, v) for k, v in kwargs.items() if k in allowed_keys)
+        self.__dict__.update(
+            {
+                FILENAME: filename,
+                AMT: amount_field,
+                DATE: date_field,
+                ENVELOPE: envelope_field,
+                DEBIT_FLAG_FIELD: debit_flag_field,
+                DEBIT_FLAG: debit_flag,
+                SESSION: session,
+            }
+        )
+        self.__dict__.update((k, v) for k, v in kwargs if k in allowed_keys)
 
         self._extracted_contents = None
 
@@ -61,7 +80,7 @@ class TransactionsReader(object):
 
             # d is a dictionary where extracted infrmation is stored into
             d = {}
-            
+
             self._extract_amount(x, d)
             self._extract_date(x, d)
             self._extract_envelope(x, d)
@@ -69,7 +88,7 @@ class TransactionsReader(object):
             # ignore bookings set for the future
             if d["date"] > datetime.date.today():
                 ignored_due_tue_date_count += 1
-                continue   
+                continue
             if "date" not in d:
                 logging.error(f"No Date found for {x}")
                 continue
@@ -77,7 +96,9 @@ class TransactionsReader(object):
             extracted_contents.append(d)
             self.add_parent_envelopes(extracted_contents, d)
 
-        logging.info(f"ignored {ignored_due_tue_date_count} transactions, set for future date")
+        logging.info(
+            f"ignored {ignored_due_tue_date_count} transactions, set for future date"
+        )
         return extracted_contents
 
     def _extract_amount(self, source: dict, target: dict) -> None:
@@ -90,7 +111,7 @@ class TransactionsReader(object):
             if source[self.__dict__[DEBIT_FLAG_FIELD]] != self.__dict__[DEBIT_FLAG]:
                 target["amount"] = -target["amount"]
 
-    def _extract_envelope(self, source: dict, target: dict) -> None: 
+    def _extract_envelope(self, source: dict, target: dict) -> None:
         # Extracts the envelope (category) of the source dict using the supplied ENVELOPE key
         try:
             target["envelope"] = source[self.__dict__[ENVELOPE]]
@@ -101,7 +122,7 @@ class TransactionsReader(object):
         # Extracts the date of the source dict using the supplied DATE key
         for date in self.__dict__[DATE]:
             if date in source:
-                target["date"] =  dateparser.parse(source[date]).date()
+                target["date"] = dateparser.parse(source[date]).date()
                 ## valid date found no need to look at lower prio fields
                 break
 

@@ -1,0 +1,38 @@
+[
+    {
+        "bookingtext": "Pet store",
+        "transactiondate": "2023-06-06 17:15:12",
+        "bookingdate": "2023-06-07",
+        "amount": "50",
+        "envelope": "Household:Pets"
+    },
+    {
+        "bookingtext": "Pet store",
+        "transactiondate": "2023-06-20 17:15:12",
+        "bookingdate": "2023-06-21",
+        "amount": "50",
+        "envelope": "Household:Pets"
+    },
+    {
+        "bookingtext": "Pet store",
+        "transactiondate": "2023-06-27 17:15:12",
+        "bookingdate": "2023-06-28",
+        "analysisdate": "2023-07-01",
+        "amount": "50",
+        "envelope": "Household:Pets"
+    },
+    {
+        "bookingtext": "Pet store",
+        "transactiondate": "2023-07-06 17:15:12",
+        "bookingdate": "2023-07-07",
+        "amount": "50",
+        "envelope": "Household:Pets"
+    },
+    {
+        "bookingtext": "Pet store",
+        "transactiondate": "2023-07-24 17:15:12",
+        "bookingdate": "2023-07-25",
+        "amount": "50",
+        "envelope": "Household:Pets"
+    }    
+]
