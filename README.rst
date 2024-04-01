@@ -53,7 +53,7 @@ Todo:
 Command line options:
 --------------------------------
 
-see also * Documentation: http://budget-envelopes.rtfd.io
+see also Documentation: http://budget-envelopes.rtfd.io
 
 .. image:: https://readthedocs.org/projects/budget-envelopes/badge/?version=latest
         :target: https://budget-envelopes.readthedocs.io/en/latest/?version=latest

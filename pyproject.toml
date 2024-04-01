@@ -3,7 +3,7 @@ name = "budget-envelopes"
 version = "0.3.0"
 description = ""
 authors = ["Michael P Schroeder <michael.p.schroeder@gmail.com>"]
-readme = "README.md"
+readme = "README.rst"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
