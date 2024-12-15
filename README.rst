@@ -89,6 +89,12 @@ see also Documentation: http://budget-envelopes.rtfd.io
                                 budgets should be calculated forwards. The format
                                 is '2023-05'
         -o, --output-file TEXT     Output file name for .json file
+        -x, --extra-files          Stores multiple extra files along the envelope-
+                                stats.json: envelope-stats-history.json: Monthly
+                                development history of the envelopesenvelope-
+                                stats-aggregated.json: Yearly aggregation of the
+                                envelopesenvelope-stats.png: A somewhat weird
+                                plot of the current state.
         -S, --session TEXT         When adding multiple files per CLI, use a session
                                 string that ties the calls together
         --help                     Show this message and exit.
