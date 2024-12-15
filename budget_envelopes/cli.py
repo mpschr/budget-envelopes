@@ -68,6 +68,15 @@ logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
     help="Output file name for .json file",
 )
 @click.option(
+    "--extra-files",
+    "-x",
+    is_flag=True,
+    help = 'Stores multiple extra files along the envelope-stats.json:\n' +
+    'envelope-stats-history.json: Monthly development history of the envelopes' + 
+    'envelope-stats-aggregated.json: Yearly aggregation of the envelopes' +
+    'envelope-stats.png: A somewhat weird plot of the current state.' 
+)
+@click.option(
     "--session",
     "-S",
     help="When adding multiple files per CLI, use a session string that ties the calls together",
@@ -83,6 +92,7 @@ def main_cli(
     debit_flag=None,
     session=None,
     first_month=None,
+    extra_files=False
 ):
     """Console script for budget_envelopes."""
     click.echo(
@@ -116,7 +126,17 @@ def main_cli(
     stats = esc.get_envelope_stats()
     month_now = f"{datetime.now().year}-{datetime.now().month:02d}"
     stats_json = stats.query(f"month == '{month_now}'").reset_index().to_dict("records")
+
+    if extra_files == True:
+        write_json_current_state(output_file, stats_json)
+        write_history_and_aggregation_csvs(output_file, stats)    
+        make_plot(output_file)
+
+def write_history_and_aggregation_csvs(output_file, stats):
+    
+    # aggregation csv
     stats.reset_index().to_csv(output_file.replace(".json", "-history-monthly.csv"))
+
     stats.reset_index().assign(year=lambda df: df.month.str[:4])\
         .groupby(['envelope','year']).agg({
         'budget': sum,
@@ -124,14 +144,13 @@ def main_cli(
         'state': 'last'
     })\
     .sort_values(['year','envelope']).to_csv(output_file.replace(".json", "-aggregated.csv"))
-    
+
+def write_json_current_state(output_file, stats_json):
     with open(output_file, "w") as o:
         json.dump(stats_json, o, indent=4)
         logging.info(
             f"envelope stats of {len(stats_json)} envelopes written to file {output_file}"
         )
-
-    make_plot(output_file)
 
 
 def make_plot(output_file):
