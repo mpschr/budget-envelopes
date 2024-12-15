@@ -112,10 +112,19 @@ def main_cli(
 
         esc.add_transactions(reader)
 
+    ## write output files
     stats = esc.get_envelope_stats()
     month_now = f"{datetime.now().year}-{datetime.now().month:02d}"
     stats_json = stats.query(f"month == '{month_now}'").reset_index().to_dict("records")
-    stats.reset_index().to_csv(output_file.replace(".json", ".csv"))
+    stats.reset_index().to_csv(output_file.replace(".json", "-history-monthly.csv"))
+    stats.reset_index().assign(year=lambda df: df.month.str[:4])\
+        .groupby(['envelope','year']).agg({
+        'budget': sum,
+        'adjustment': sum,
+        'state': 'last'
+    })\
+    .sort_values(['year','envelope']).to_csv(output_file.replace(".json", "-aggregated.csv"))
+    
     with open(output_file, "w") as o:
         json.dump(stats_json, o, indent=4)
         logging.info(
