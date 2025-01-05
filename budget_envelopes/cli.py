@@ -16,7 +16,7 @@ from datetime import datetime
 
 
 logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
-
+_current_month = str(datetime.today())[0:7]
 
 @click.command()
 @click.option(
@@ -62,6 +62,12 @@ logging.basicConfig(encoding="utf-8", level=logging.DEBUG)
     help="Supply from which month the transctions and budgets should be calculated forwards. The format is '2023-05'",
 )
 @click.option(
+    "--last-month",
+    help=f"Supply from which month the transctions and budgets should be calculated forwards. The format is '{_current_month}'." +
+    f" Default value is current Month ({_current_month})",
+    default=_current_month
+)
+@click.option(
     "--output-file",
     "-o",
     default="data/envelope-stats.json",
@@ -92,6 +98,7 @@ def main_cli(
     debit_flag=None,
     session=None,
     first_month=None,
+    last_month=None,
     extra_files=False
 ):
     """Console script for budget_envelopes."""
@@ -101,9 +108,9 @@ def main_cli(
 
     if session is None:
         session = "".join(random.choices(string.ascii_uppercase + string.digits, k=15))
-        logging.info(session)
+        #logging.info(session)
 
-    esc = EnvelopeStatsCalculator(first_month=first_month)
+    esc = EnvelopeStatsCalculator(first_month=first_month, last_month=last_month)
 
     for bfile in budgets:
         budgetreader = BudgetReader(filename=bfile)
@@ -124,13 +131,12 @@ def main_cli(
 
     ## write output files
     stats = esc.get_envelope_stats()
-    month_now = f"{datetime.now().year}-{datetime.now().month:02d}"
-    stats_json = stats.query(f"month == '{month_now}'").reset_index().to_dict("records")
+    stats_json = stats.query(f"month == '{last_month}'").reset_index().to_dict("records")
 
     if extra_files == True:
         write_json_current_state(output_file, stats_json)
         write_history_and_aggregation_csvs(output_file, stats)    
-        make_plot(output_file)
+        make_plot(output_file, last_month)
 
 def write_history_and_aggregation_csvs(output_file, stats):
     
@@ -153,12 +159,13 @@ def write_json_current_state(output_file, stats_json):
         )
 
 
-def make_plot(output_file):
+def make_plot(output_file, last_month):
     logging.getLogger("matplotlib").setLevel(logging.ERROR)
     logging.getLogger("PIL").setLevel(logging.ERROR)
 
     envelopes = pandas.read_json(output_file).sort_values("envelope", ascending=False)
-    envelopes_currentmonth = envelopes.loc[envelopes.month == envelopes.month.max()]
+    envelopes_currentmonth = envelopes.loc[envelopes.month == last_month]
+    logging.debug("Plotting month " + envelopes_currentmonth.month.unique())
     plot_month(envelopes_currentmonth, output_file.replace(".json", ".png"))
 
     for month in envelopes.loc[envelopes.month != envelopes.month.max()].month.unique():

@@ -88,6 +88,10 @@ see also Documentation: http://budget-envelopes.rtfd.io
         --first-month TEXT         Supply from which month the transctions and
                                 budgets should be calculated forwards. The format
                                 is '2023-05'
+        --last-month TEXT          Supply from which month the transctions and
+                                budgets should be calculated forwards. The format
+                                is '2025-01'. Default value is current Month
+                                (2025-01)                                
         -o, --output-file TEXT     Output file name for .json file
         -x, --extra-files          Stores multiple extra files along the envelope-
                                 stats.json: envelope-stats-history.json: Monthly

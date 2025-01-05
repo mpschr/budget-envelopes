@@ -9,18 +9,21 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 import pandas
 
 FIRST_MONTH = "first_month"
+LAST_MONTH = "last_month"
 
 
 class EnvelopeStatsCalculator(object):
     def __init__(self, *args, **kwargs) -> None:
         if FIRST_MONTH in kwargs:
             self._first_month = kwargs[FIRST_MONTH]
-        self._last_month = None
+        if LAST_MONTH in kwargs:
+            self._last_month = kwargs[LAST_MONTH]            
         self._budget_months = None
         self._transactions = None
         self.stats = None
         self.budgets = None
         self._processed_budgets = []
+        logging.debug(self._first_month + '  ' + self._last_month)
 
     def add_budgets(self, budgetreader: BudgetReader):
         print(f"adding budgets {budgetreader.budgets_filename}")
@@ -67,6 +70,7 @@ class EnvelopeStatsCalculator(object):
         gdf = self._apply_adjustments(gdf)
 
         gdf = gdf.query(f'month >= "{self._first_month}"')
+        #gdf = gdf.query(f'month <= "{self._last_month}"')
         gdf.loc[:, "difference"] = gdf.budget - gdf.amount
         gdf.loc[:, "cumsum"] = gdf.difference.cumsum()
         gdf.loc[:, "carryover"] = gdf.difference.shift(1).cumsum()
@@ -133,7 +137,6 @@ class EnvelopeStatsCalculator(object):
         )
 
     def _update_budget_months(self) -> None:
-        self._last_month = self._transactions.month.max()
         self._budget_months = []
 
         min_year, min_month = [int(x) for x in self._first_month.split("-")]
